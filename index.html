@@ -275,7 +275,7 @@
     .n-acts { display: flex; gap: 2px; flex-shrink: 0; position: relative; }
 
     .ib {
-      background: transparent; border: none; color: var(--muted);
+      background: transparent; border: none; color: color-mix(in srgb, var(--accent, var(--green)) 40%, transparent);
       font-family: 'JetBrains Mono', monospace; font-size: 12px; cursor: pointer;
       padding: 3px 5px; border-radius: 2px; transition: color .12s, background .12s; line-height: 1;
     }
@@ -327,7 +327,7 @@
     .clbl.dn { color: color-mix(in srgb, var(--accent, var(--green)) 30%, transparent); text-decoration: line-through; }
 
     .acb {
-      margin-top: 7px; background: transparent; border: none; color: var(--muted);
+      margin-top: 7px; background: transparent; border: none; color: color-mix(in srgb, var(--accent, var(--green)) 40%, transparent);
       font-family: 'JetBrains Mono', monospace; font-size: 11px; cursor: pointer;
       padding: 2px 0; text-align: left; transition: color .12s;
     }
@@ -335,7 +335,7 @@
     .acb.dn { display: none; }
 
     .rcb {
-      margin-top: 4px; background: transparent; border: none; color: var(--muted);
+      margin-top: 4px; background: transparent; border: none; color: color-mix(in srgb, var(--accent, var(--green)) 40%, transparent);
       font-family: 'JetBrains Mono', monospace; font-size: 11px; cursor: pointer;
       padding: 2px 0; text-align: left; transition: color .12s;
     }
@@ -359,8 +359,8 @@
     .n-tog:hover { border-color: var(--accent, var(--green)); color: var(--accent, var(--green)); }
     .n-tog.on { border-color: color-mix(in srgb, var(--accent, var(--green)) 55%, transparent); color: var(--accent, var(--green)); background: color-mix(in srgb, var(--accent, var(--green)) 8%, transparent); }
 
-    .n-meta { color: var(--muted); font-size: 9px; letter-spacing: .04em; display: flex; gap: 6px; align-items: center; }
-    .n-prog { color: color-mix(in srgb, var(--accent,var(--green)) 70%, var(--muted)); }
+    .n-meta { color: color-mix(in srgb, var(--accent, var(--green)) 38%, transparent); font-size: 9px; letter-spacing: .04em; display: flex; gap: 6px; align-items: center; }
+    .n-prog { color: color-mix(in srgb, var(--accent, var(--green)) 60%, transparent); }
 
     /* resize handle */
     .n-rsz {
