@@ -583,15 +583,16 @@ const BOARD_REF = ref(_db, 'board/notes');
 
 /* ── NOTES ── */
 let notes=[],zt=20,acp=null;
+const NC=[
+  {v:'hsl(135,100%,50%)'},{v:'hsl(180,100%,50%)'},{v:'hsl(195,100%,52%)'},
+  {v:'hsl(210,100%,58%)'},{v:'hsl(255,100%,68%)'},{v:'hsl(270,100%,65%)'},
+  {v:'hsl(300,100%,58%)'},{v:'hsl(330,100%,60%)'},{v:'hsl(0,100%,58%)'},
+  {v:'hsl(20,100%,58%)' }
+];
 
 function sv(id){
-  // write single note (or all if no id given)
-  if(id!==undefined){
-    const n=gn(id);
-    if(n) set(ref(_db,`board/notes/${id}`), n);
-  } else {
-    // full write (used by confirmClear via remove)
-  }
+  const n=gn(id);
+  if(n) set(ref(_db,`board/notes/${id}`), n);
 }
 
 function gn(id){return notes.find(n=>n.id===id);}
@@ -604,65 +605,61 @@ function up(id,f){
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 
 function loadNotes(){
-  // Show syncing indicator
   document.getElementById('note-count').textContent='syncing...';
   onValue(BOARD_REF, snap => {
-    // rebuild notes array from firebase
     const incoming = [];
     if(snap.exists()) snap.forEach(c=>incoming.push(c.val()));
 
-    // find added/removed/changed notes
-    const incomingIds = new Set(incoming.map(n=>n.id));
-    const existingIds = new Set(notes.map(n=>n.id));
+    const incomingIds = new Set(incoming.map(n=>String(n.id)));
 
-    // remove deleted notes from DOM
+    // remove notes deleted on another device
     notes.forEach(n=>{
-      if(!incomingIds.has(n.id)){
+      if(!incomingIds.has(String(n.id))){
         const el=document.querySelector(`.note[data-id="${n.id}"]`);
         if(el){el.classList.add('eout');el.addEventListener('animationend',()=>el.remove(),{once:true});}
       }
     });
 
-    // add new notes to DOM
+    // add or fully sync each incoming note
     incoming.forEach(n=>{
-      if(!existingIds.has(n.id)) render(n, false);
-    });
+      const existingData = notes.find(e=>String(e.id)===String(n.id));
+      const el = document.querySelector(`.note[data-id="${n.id}"]`);
 
-    // update changed notes (position, text, color, etc.) without full re-render
-    incoming.forEach(n=>{
-      const existing=gn(n.id);
-      if(existing){
-        const el=document.querySelector(`.note[data-id="${n.id}"]`);
-        if(el){
-          // sync position if changed externally (different device)
-          if(existing.x!==n.x||existing.y!==n.y){
-            el.style.left=n.x+'px'; el.style.top=n.y+'px';
-          }
-          // sync color
-          if(existing.color!==n.color){
-            el.style.setProperty('--accent',n.color);
-          }
-          // sync tag
-          if(existing.tag!==n.tag){
-            const ti=el.querySelector('.n-tag');
-            if(ti&&document.activeElement!==ti) ti.value=n.tag;
-          }
-          // sync text
-          if(existing.text!==n.text){
-            const ta=el.querySelector('.n-ta');
-            if(ta&&document.activeElement!==ta) ta.value=n.text;
-          }
-          // sync checklist/mode if changed
-          if(JSON.stringify(existing.checklist)!==JSON.stringify(n.checklist)||existing.mode!==n.mode){
-            Object.assign(existing,n);
-            setMode(el,existing);
-          }
-          Object.assign(existing,n);
+      if(!existingData || !el){
+        // brand new note — render it
+        render(n, false);
+      } else {
+        // existing note — patch DOM with any changed fields
+        const focused = document.activeElement;
+
+        // position
+        if(existingData.x!==n.x||existingData.y!==n.y){
+          el.style.left=n.x+'px'; el.style.top=n.y+'px';
         }
+        // size
+        if(existingData.w!==n.w) el.style.width=(n.w||228)+'px';
+        if(existingData.h!==n.h&&n.h) el.style.minHeight=n.h+'px';
+        // color — always apply so picker changes show immediately
+        el.style.setProperty('--accent', n.color);
+        // tag
+        const ti=el.querySelector('.n-tag');
+        if(ti && focused!==ti) ti.value=n.tag||'';
+        // text
+        const ta=el.querySelector('.n-ta');
+        if(ta && focused!==ta) ta.value=n.text||'';
+        // pin
+        const pb=el.querySelector('.pin-btn');
+        if(pb){pb.textContent=n.pinned?'📌':'◇';pb.classList.toggle('pinon',!!n.pinned);}
+        // mode / checklist — re-run setMode if anything changed
+        if(existingData.mode!==n.mode || JSON.stringify(existingData.checklist)!==JSON.stringify(n.checklist)){
+          Object.assign(existingData, n);
+          setMode(el, n);
+        }
+        Object.assign(existingData, n);
       }
     });
 
-    notes=incoming;
+    notes = incoming;
     ui();
   });
 }
