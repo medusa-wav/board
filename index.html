@@ -37,10 +37,10 @@
       align-items: flex-start;
       justify-content: center;
       padding: 5rem 1.5rem 6rem;
+      padding-top: calc(88px + 4rem);
       overflow-x: hidden;
     }
 
-    /* ── NOISE ── */
     body::before {
       content: '';
       position: fixed; inset: 0;
@@ -48,7 +48,6 @@
       pointer-events: none; z-index: 9999; opacity: 0.35;
     }
 
-    /* ── SCANLINES ── */
     body::after {
       content: '';
       position: fixed; inset: 0;
@@ -60,7 +59,6 @@
       pointer-events: none; z-index: 9998;
     }
 
-    /* ── AMBIENT ORBS ── */
     .orb {
       position: fixed;
       border-radius: 50%;
@@ -90,6 +88,86 @@
     @keyframes orb2 {
       0%,100% { transform: scale(1) translate(0,0); }
       50%      { transform: scale(1.15) translate(-20px, -30px); }
+    }
+
+    /* ── EP BANNER ── */
+    .ep-banner {
+      position: fixed; top: 0; left: 0; right: 0;
+      z-index: 10000; min-height: 88px;
+      display: flex; align-items: stretch;
+      text-decoration: none;
+      background: #0e0b06;
+      border-bottom: 1px solid var(--border);
+      overflow: hidden; transition: background 0.25s;
+    }
+
+    .ep-banner::before {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(100deg, rgba(200,120,32,0.09) 0%, transparent 55%);
+      pointer-events: none; z-index: 0;
+    }
+
+    .ep-banner:hover { background: #13100a; }
+    .ep-banner:hover .ep-arrow { transform: translate(2px,-2px); color: var(--accent); }
+    .ep-banner:hover .ep-listen { color: var(--bright); }
+
+    .ep-cover {
+      width: 88px; min-width: 88px; height: 88px;
+      object-fit: cover; flex-shrink: 0;
+      filter: brightness(0.88) saturate(1.15);
+      position: relative; z-index: 1;
+    }
+
+    .ep-body {
+      flex: 1; display: flex; flex-direction: column;
+      justify-content: center; gap: 5px; padding: 14px 16px;
+      position: relative; z-index: 1;
+    }
+
+    .ep-top { display: flex; align-items: center; gap: 8px; }
+
+    .ep-pill {
+      font-size: 0.42rem; letter-spacing: 0.22em; text-transform: uppercase;
+      color: var(--accent); border: 1px solid var(--accent3);
+      border-radius: 2px; padding: 2px 6px; flex-shrink: 0;
+    }
+
+    .ep-eyebrow {
+      font-size: 0.38rem; letter-spacing: 0.28em;
+      color: var(--dim); text-transform: uppercase; line-height: 1;
+    }
+
+    .ep-title {
+      font-family: 'Syne', sans-serif; font-weight: 800;
+      font-size: 1.35rem; letter-spacing: -0.04em;
+      color: var(--white); line-height: 1;
+    }
+
+    .ep-title .dot {
+      color: var(--accent);
+      animation: blink 4.5s ease-in-out infinite;
+    }
+
+    .ep-sub {
+      font-size: 0.38rem; letter-spacing: 0.18em;
+      color: var(--dim); text-transform: uppercase; font-style: italic;
+    }
+
+    .ep-cta {
+      display: flex; align-items: center;
+      padding: 0 20px; gap: 8px; flex-shrink: 0;
+      position: relative; z-index: 1;
+    }
+
+    .ep-listen {
+      font-size: 0.4rem; letter-spacing: 0.22em; text-transform: uppercase;
+      color: var(--muted); font-style: italic;
+      transition: color 0.2s; white-space: nowrap;
+    }
+
+    .ep-arrow {
+      font-size: 0.85rem; color: var(--dim);
+      transition: transform 0.22s cubic-bezier(0.2,1,0.4,1), color 0.2s;
     }
 
     /* ── PAGE ── */
@@ -248,10 +326,7 @@
       transition: opacity 0.2s, top 0.25s cubic-bezier(0.2,1,0.4,1), bottom 0.25s cubic-bezier(0.2,1,0.4,1);
     }
 
-    .link-item:hover::before {
-      opacity: 1; top: 10%; bottom: 10%;
-    }
-
+    .link-item:hover::before { opacity: 1; top: 10%; bottom: 10%; }
     .link-item:hover .link-label  { color: var(--white); }
     .link-item:hover .link-plat   { color: var(--accent2); }
     .link-item:hover .link-arrow  { transform: translate(3px,-3px); color: var(--accent); }
@@ -268,11 +343,7 @@
       fill: var(--muted); transition: fill 0.2s, stroke 0.2s;
     }
 
-    .link-icon svg[stroke] {
-      fill: none;
-      stroke: var(--muted);
-    }
-
+    .link-icon svg[stroke] { fill: none; stroke: var(--muted); }
     .link-item:hover .link-icon svg[stroke] { stroke: var(--accent2); }
 
     .link-body { flex: 1; display: flex; flex-direction: column; gap: 0.1rem; }
@@ -320,10 +391,7 @@
       transition: color 0.2s, border-color 0.2s;
     }
 
-    .email-a:hover {
-      color: var(--accent2);
-      border-color: var(--accent3);
-    }
+    .email-a:hover { color: var(--accent2); border-color: var(--accent3); }
 
     /* ── FOOTER ── */
     .footer {
@@ -348,30 +416,46 @@
       font-style: italic;
     }
 
-    /* ── KEYFRAME ── */
     @keyframes rise {
       from { opacity: 0; transform: translateY(12px); }
       to   { opacity: 1; transform: translateY(0); }
     }
 
-    /* ── ANIMATION DELAYS ── */
     .sec-songs .sep         { animation-delay: 0.50s; }
     .sec-songs .link-item:nth-child(1) { animation-delay: 0.58s; }
     .sec-songs .link-item:nth-child(2) { animation-delay: 0.66s; }
     .sec-songs .link-item:nth-child(3) { animation-delay: 0.74s; }
-    .sec-songs .link-item:nth-child(4) { animation-delay: 0.82s; }
 
     .sec-social .sep         { animation-delay: 0.90s; }
     .sec-social .link-item:nth-child(1) { animation-delay: 0.98s; }
     .sec-social .link-item:nth-child(2) { animation-delay: 1.06s; }
-    .sec-social .link-item:nth-child(3) { animation-delay: 1.14s; }
 
     @media (max-width: 500px) {
-      body { padding: 3.5rem 1.2rem 5rem; }
+      body { padding: 3.5rem 1.2rem 5rem; padding-top: calc(88px + 2.5rem); }
+      .ep-cta { padding: 0 12px; }
+      .ep-listen { display: none; }
     }
   </style>
 </head>
 <body>
+
+  <!-- ── EP BANNER ── -->
+  <a class="ep-banner" href="https://soundcloud.com/sunn00s/sets/sunset" target="_blank" rel="noopener">
+    <img class="ep-cover" src="data:image/jpeg;base64,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" alt="sunset EP cover">
+    <div class="ep-body">
+      <div class="ep-top">
+        <div class="dot-live"></div>
+        <div class="ep-pill">novo ep</div>
+        <span class="ep-eyebrow">out now</span>
+      </div>
+      <div class="ep-title">sunset<span class="dot">.</span></div>
+      <div class="ep-sub">sunn · ep · 2025</div>
+    </div>
+    <div class="ep-cta">
+      <span class="ep-listen">ouvir agora</span>
+      <span class="ep-arrow">↗</span>
+    </div>
+  </a>
 
   <div class="orb orb-1"></div>
   <div class="orb orb-2"></div>
@@ -437,8 +521,7 @@
         <div class="sep-line"></div>
       </div>
 
-      <a href="https://www.instagram.com/sunn.
-        00s/" target="_blank" rel="noopener" class="link-item">
+      <a href="https://www.instagram.com/sunn.00s/" target="_blank" rel="noopener" class="link-item">
         <div class="link-icon">
           <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
         </div>
@@ -461,13 +544,11 @@
       </a>
     </div>
 
-    <!-- EMAIL -->
     <div class="email-block">
       <div class="email-lbl">contato direto</div>
       <a href="mailto:stain.wav@gmail.com" class="email-a">stain.wav@gmail.com</a>
     </div>
 
-    <!-- FOOTER -->
     <div class="footer">
       <div class="footer-mark">sunn<span>.</span></div>
       <div class="footer-copy">beats that speak louder than words</div>
